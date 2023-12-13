@@ -1,12 +1,12 @@
 $(document).ready(function () {
-    $('#RegisterActBtn').on('click', function () {
-        console.log("register");
-        window.location.href = 'Login.html';
+    $('#LoginActBt').on('click', function () {
+        console.log("login");
+        window.location.href = 'Chat.html';
     });
 
-    $('#RShowPassword').on('click', function () {
+    $('#LShowPassword').on('click', function () {
         console.log("works")
-        var x = $("#Rpassword");
+        var x = $("#LPassword");
         if (x.prop("type") == "password") {
             x.prop("type", "text");
         } else {
