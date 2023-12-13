@@ -5,6 +5,10 @@ $(document).ready(function () {
         if (username && !username.includes(" ")) {
             if (password && !password.includes(" ")) {
                 console.log("register");
+                // Clear input fields
+                $('#Rusername').val('');
+                $('#Rpassword').val('');
+
                 window.location.href = 'Login.html';
             } else {
                 alert("Password must not have spaces or be empty");

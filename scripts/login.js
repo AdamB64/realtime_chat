@@ -2,6 +2,9 @@ $(document).ready(function () {
     $('#LoginActBt').on('click', function () {
         console.log("login");
         var username = $('#LUsername').val();
+        // Clear input fields
+        $('#LUsername').val('');
+        $('#LPassword').val('');
         window.location.href = 'Chat.html?username=' + encodeURIComponent(username);
     });
 
