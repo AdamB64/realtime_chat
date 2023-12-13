@@ -2,7 +2,7 @@ $(document).ready(function () {
     $('#LoginActBt').on('click', function () {
         console.log("login");
         var username = $('#LUsername').val();
-        window.location.href = 'Chat.html?username=' + encodeURIComponent(username);;
+        window.location.href = 'Chat.html?username=' + encodeURIComponent(username);
     });
 
     $('#LShowPassword').on('click', function () {
@@ -13,5 +13,8 @@ $(document).ready(function () {
         } else {
             x.prop("type", "password");
         }
+    });
+    $('#RegisterArcBtn').on('click', function () {
+        window.location.href = 'Register.html';
     });
 });

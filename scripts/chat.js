@@ -23,4 +23,7 @@ $(document).ready(function () {
             $('#input').focus();
         }
     });
+    if (username == null || username == "" || username.includes(" ") == true) {
+        window.location.href = 'login.html'
+    }
 });
