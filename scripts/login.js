@@ -1,7 +1,8 @@
 $(document).ready(function () {
     $('#LoginActBt').on('click', function () {
         console.log("login");
-        window.location.href = 'Chat.html';
+        var username = $('#LUsername').val();
+        window.location.href = 'Chat.html?username=' + encodeURIComponent(username);;
     });
 
     $('#LShowPassword').on('click', function () {
