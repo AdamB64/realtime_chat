@@ -86,4 +86,9 @@ $(document).ready(function () {
             $('#input').focus();
         }
     });
+
+    // Redirect to login page if the username is invalid
+    if (username == null || username == "" || username.includes(" ") == true) {
+        window.location.href = 'login.html';
+    }
 });

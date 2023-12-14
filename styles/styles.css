@@ -41,6 +41,16 @@ a {
     color: gray;
 }
 
+#RShowPassword {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+#LShowPassword {
+    display: inline-block;
+    margin-right: 8px;
+}
+
 .button {
     color: rgb(0, 0, 0);
     padding: 16px;
@@ -75,6 +85,7 @@ a {
     border-radius: 3px;
     outline: none;
     color: #fff;
+    width: 10%;
 }
 
 #messages {
@@ -110,4 +121,15 @@ a {
 
 input {
     color: black;
+    width: 60%;
+    height: 35px;
+    font-size: 20px;
+}
+
+#username {
+    width: 30%;
+}
+
+#password {
+    width: 60%;
 }
