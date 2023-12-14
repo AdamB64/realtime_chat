@@ -32,11 +32,14 @@ wss.on('connection', (ws) => {
 
     // Handle incoming messages from clients
     ws.on('message', (message) => {
+        message = message.toString('utf8')
+        console.log(message);
+
         console.log(`Received message: ${message}`);
 
         // Broadcast the message to all connected clients
         wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
+            if (/*client !== ws &&*/ client.readyState === WebSocket.OPEN) {
                 client.send(message);
             }
         });
