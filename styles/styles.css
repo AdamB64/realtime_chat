@@ -129,6 +129,7 @@ input {
 
 #messages>li:nth-child(odd) {
     background: #efefef;
+    color: white;
 }
 
 #username {
