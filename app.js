@@ -40,7 +40,16 @@ wss.on('connection', (ws) => {
         // Broadcast the message to all connected clients
         wss.clients.forEach((client) => {
             if (/*client !== ws &&*/ client.readyState === WebSocket.OPEN) {
-                client.send(message);
+                // Parse the message once
+                const parsedMessage = JSON.parse(message);
+
+                // Set the color based on whether it's the sender or not
+                parsedMessage.color = client === ws ? 'grey' : 'black';
+                parsedMessage.alignmentClass = client === ws ? 'align-left' : 'align-right';
+
+                // Send the updated message
+                console.log(parsedMessage)
+                client.send(JSON.stringify(parsedMessage));
             }
         });
     });

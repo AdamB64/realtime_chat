@@ -89,6 +89,10 @@ a {
 }
 
 #messages {
+    width: 100%;
+    list-style: none;
+    /* Remove default list styles */
+    padding: 0;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -97,9 +101,12 @@ a {
 }
 
 #messages>li {
+    display: block;
     background-color: black;
     color: white;
     padding: 0.5rem 1rem;
+    clear: both;
+    /* Ensure that each li starts on a new line */
 }
 
 #messages>li:nth-child(odd) {
@@ -132,4 +139,14 @@ input {
 
 #password {
     width: 60%;
+}
+
+/* Align to the left */
+.align-left {
+    float: left;
+}
+
+/* Align to the right */
+.align-right {
+    float: right;
 }

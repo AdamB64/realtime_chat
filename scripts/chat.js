@@ -26,7 +26,8 @@ $(document).ready(function () {
             // Assuming data has a 'username' and 'message' property
             if (data.username && data.message) {
                 // Append the message to the #messages ul
-                $('#messages').append('<li><strong>' + data.username + ':</strong> ' + data.message + '</li>');
+                $('#messages').append('<li class="' + data.alignmentClass + '" style="background-color:' + data.color + ';">' +
+                    '<strong>' + data.username + ':</strong> ' + data.message + '</li>');
 
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
@@ -59,9 +60,9 @@ $(document).ready(function () {
     });*/
 
     // WebSocket connection closed
-    socket.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed', event);
-    });
+    //socket.addEventListener('close', (event) => {
+    //  console.log('WebSocket connection closed', event);
+    //});
 
     // WebSocket connection error
     socket.addEventListener('error', (event) => {
