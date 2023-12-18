@@ -9,6 +9,8 @@ $(document).ready(function () {
                 $('#Rusername').val('');
                 $('#Rpassword').val('');
 
+                registerUser(username, password);
+
                 window.location.href = 'Login.html';
             } else {
                 alert("Password must not have spaces or be empty");
@@ -27,4 +29,16 @@ $(document).ready(function () {
             x.prop("type", "password");
         }
     });
+
+    const registerUser = async (username, password) => {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await response.json();
+        console.log(data.message);
+    }
 });

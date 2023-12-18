@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const path = require('path');
+const users = require('./mongo/users.js')
 
 const app = express();
 const port = 3000;
@@ -19,6 +20,23 @@ const wss = new WebSocket.Server({ server });
 
 // Set the 'views' folder as the static directory
 app.use(express.static(path.join(__dirname, 'views')));
+
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    const user = new users({
+        username,
+        password
+    });
+
+    try {
+        await user.save();
+        res.json({ message: 'User created successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error registering user' });
+    }
+});
 
 // Serve the 'index.html' file
 app.get('/', (req, res) => {
