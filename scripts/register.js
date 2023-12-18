@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#RegisterActBtn').on('click', function () {
+    $('#RegisterActBtn').on('click', async function () {
         var username = $('#Rusername').val();
         var password = $('#Rpassword').val();
         if (username && !username.includes(" ")) {
@@ -9,17 +9,19 @@ $(document).ready(function () {
                 $('#Rusername').val('');
                 $('#Rpassword').val('');
 
-                let regsiterLogic = registerUser(username, password);
+                let regsiterLogic = await registerUser(username, password);
+
+                console.log(regsiterLogic);
                 if (regsiterLogic == false) {
-                    alert("User already exists");
+                    toastr.error("User already exists");
                 } else {
                     window.location.href = 'Login.html';
                 }
             } else {
-                alert("Password must not have spaces or be empty");
+                toastr.error("Password must not have spaces or be empty");
             }
         } else {
-            alert("Username must not have spaces or be empty");
+            toastr.error("Username must not have spaces or be empty");
         }
     });
 
@@ -44,9 +46,10 @@ $(document).ready(function () {
         const data = await response.json();
         console.log(data.message);
         if (data.message == "User already exits") {
-            return false;
+            regsiterLogic = false;
         } else {
-            return true;
+            regsiterLogic = true;
         }
+        return regsiterLogic;
     }
 });

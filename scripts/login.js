@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    toastr.success("User created successfully");
     $('#LoginActBt').on('click', function () {
         console.log("login");
         var username = $('#LUsername').val();

@@ -66,21 +66,21 @@ app.post('/register', async (req, res) => {
     const { username, password } = req.body;
 
     const userExists = await users.findOne({ username });
-    if (userExists) {
+    if (userExists) {// Check if the user already exists  
         res.json({ message: 'User already exits' });
-    }// Check if the user already exists  
+    } else {
+        const user = new users({
+            username,
+            password
+        });
 
-    const user = new users({
-        username,
-        password
-    });
-
-    try {
-        await user.save();
-        res.json({ message: 'User created successfully' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error registering user' });
+        try {
+            await user.save();
+            res.json({ message: 'User created successfully' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error registering user' });
+        }
     }
 });
 
