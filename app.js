@@ -7,6 +7,12 @@ const users = require('./mongo/users.js')
 const app = express();
 const port = 3000;
 
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(express.json());
+
 // Serve static files from the 'styles' and 'scripts' folders
 app.use('/styles', express.static(path.join(__dirname, 'styles')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
@@ -20,23 +26,6 @@ const wss = new WebSocket.Server({ server });
 
 // Set the 'views' folder as the static directory
 app.use(express.static(path.join(__dirname, 'views')));
-
-app.post('/register', async (req, res) => {
-    const { username, password } = req.body;
-
-    const user = new users({
-        username,
-        password
-    });
-
-    try {
-        await user.save();
-        res.json({ message: 'User created successfully' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error registering user' });
-    }
-});
 
 // Serve the 'index.html' file
 app.get('/', (req, res) => {
@@ -71,6 +60,28 @@ wss.on('connection', (ws) => {
             }
         });
     });
+});
+
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    const userExists = await users.findOne({ username });
+    if (userExists) {
+        res.json({ message: 'User already exits' });
+    }// Check if the user already exists  
+
+    const user = new users({
+        username,
+        password
+    });
+
+    try {
+        await user.save();
+        res.json({ message: 'User created successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error registering user' });
+    }
 });
 
 // Start the server and listen on the specified port

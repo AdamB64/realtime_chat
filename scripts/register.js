@@ -9,9 +9,12 @@ $(document).ready(function () {
                 $('#Rusername').val('');
                 $('#Rpassword').val('');
 
-                registerUser(username, password);
-
-                window.location.href = 'Login.html';
+                let regsiterLogic = registerUser(username, password);
+                if (regsiterLogic == false) {
+                    alert("User already exists");
+                } else {
+                    window.location.href = 'Login.html';
+                }
             } else {
                 alert("Password must not have spaces or be empty");
             }
@@ -40,5 +43,10 @@ $(document).ready(function () {
         });
         const data = await response.json();
         console.log(data.message);
+        if (data.message == "User already exits") {
+            return false;
+        } else {
+            return true;
+        }
     }
 });
