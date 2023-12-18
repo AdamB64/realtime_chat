@@ -53,10 +53,10 @@ wss.on('connection', (ws) => {
 
                 // Set the color based on whether it's the sender or not
                 parsedMessage.color = client === ws ? 'grey' : 'black';
-                parsedMessage.alignmentClass = client === ws ? 'align-left' : 'align-right';
+                parsedMessage.alignmentClass = client === ws ? 'align-right' : 'align-left';
 
                 // Send the updated message
-                console.log(parsedMessage)
+                //console.log(parsedMessage)
                 client.send(JSON.stringify(parsedMessage));
             }
         });
