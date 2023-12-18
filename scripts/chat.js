@@ -29,7 +29,7 @@ $(document).ready(async function () {
     }
 
     // Use the username as needed
-    console.log('Username:', username);
+    //console.log('Username:', username);
     $('#username').val(username);
 
     var socket = new WebSocket('ws://localhost:3000');
@@ -56,6 +56,11 @@ $(document).ready(async function () {
 
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
+                publicChat(data.username, data.message).then(() => {
+                    console.log("public chat saved");
+                }).catch((error) => {
+                    console.error('Error:', error);
+                });
             }
         } catch (error) {
             console.error('Error parsing message:', error);
@@ -129,4 +134,13 @@ $(document).ready(async function () {
             });
     });
 
+    const publicChat = async (username, message) => {
+        const response = await fetch('/public-chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, message })
+        });
+    }
 });

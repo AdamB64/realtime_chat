@@ -7,6 +7,7 @@ const users = require('./mongo/users.js')
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const public = require('./mongo/publicChat.js');
 
 
 const app = express();
@@ -113,6 +114,25 @@ app.post('/register', async (req, res) => {
             console.error(err);
             res.status(500).json({ message: 'Error registering user' });
         }
+    }
+});
+
+app.post('/public-chat', async (req, res) => {
+    const { username, message } = req.body;
+
+    const publicChat = new public({
+        username,
+        message,
+        date: new Date()
+    });
+
+    try {
+        await publicChat.save();
+        console.log(publicChat);
+        res.json({ message: 'Message sent successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error sending message' });
     }
 });
 

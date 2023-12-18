@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(async function () {
     $('#RegisterActBtn').on('click', async function () {
         var username = $('#Rusername').val();
         var password = $('#Rpassword').val();
