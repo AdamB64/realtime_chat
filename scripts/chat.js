@@ -1,4 +1,42 @@
 $(document).ready(async function () {
+    var username;
+
+    try {
+        const response = await fetch('/get-username');
+        const data = await response.json();
+        if (data.username) {
+            username = data.username;
+        } else {
+            console.log('No user is currently logged in');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Use the username as needed
+    //console.log('Username:', username);
+    $('#username').val(username);
+
+    fetch('/public-chat')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                console.log(data[i].username + " " + $('#username').val());
+                if (data[i].username == $('#username').val()) {
+                    $('#messages').append('<li class="align-right" style="background-color:grey;">' +
+                        '<strong>' + data[i].username + ':</strong> ' + data[i].message + '</li>');
+                } else {
+                    $('#messages').append('<li class="align-left" style="background-color:black;">' +
+                        '<strong>' + data[i].username + ':</strong> ' + data[i].message + '</li>');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+
     try {
         const response = await fetch('/authorised')
         const data = await response.json()
@@ -15,22 +53,6 @@ $(document).ready(async function () {
         console.log(error);
     }
 
-    var username;
-    try {
-        const response = await fetch('/get-username');
-        const data = await response.json();
-        if (data.username) {
-            username = data.username;
-        } else {
-            console.log('No user is currently logged in');
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
-    // Use the username as needed
-    //console.log('Username:', username);
-    $('#username').val(username);
 
     var socket = new WebSocket('ws://localhost:3000');
 

@@ -169,6 +169,11 @@ app.get('/get-username', (req, res) => {
     }
 });
 
+app.get('/public-chat', async (req, res) => {
+    const publicChat = await public.find();
+    res.json(publicChat);
+});
+
 // Start the server and listen on the specified port
 server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
