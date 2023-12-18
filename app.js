@@ -3,6 +3,7 @@ const http = require('http');
 const WebSocket = require('ws');
 const path = require('path');
 const users = require('./mongo/users.js')
+const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3000;
@@ -81,6 +82,23 @@ app.post('/register', async (req, res) => {
             console.error(err);
             res.status(500).json({ message: 'Error registering user' });
         }
+    }
+});
+
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    const userExists = await users.findOne({ username });
+    if (userExists) {// Check if the user already exists  
+        // Compare the plain text password with the hashed password
+        const validPassword = await bcrypt.compare(password, userExists.password);
+        if (validPassword) {
+            res.json({ message: 'User logged in successfully' });
+        } else {
+            res.json({ message: 'Password is incorrect' });
+        }
+    } else {
+        res.json({ message: 'User does not exist' });
     }
 });
 

@@ -15,7 +15,7 @@ $(document).ready(function () {
                 if (regsiterLogic == false) {
                     toastr.error("User already exists");
                 } else {
-                    window.location.href = 'Login.html';
+                    window.location.href = 'Login.html?fromRegister=true';
                 }
             } else {
                 toastr.error("Password must not have spaces or be empty");
