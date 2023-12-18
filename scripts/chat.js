@@ -114,9 +114,9 @@ $(document).ready(async function () {
     });
 
     // Redirect to login page if the username is invalid
-    if (username == null || username == "" || username.includes(" ") == true) {
-        window.location.href = 'login.html';
-    }
+    //if (username == null || username == "" || username.includes(" ") == true) {
+    //window.location.href = 'login.html';
+    //}
 
     socket.addEventListener('close', function (e) {
         fetch('/logout', {
