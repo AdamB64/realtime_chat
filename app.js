@@ -6,6 +6,7 @@ const path = require('path');
 const users = require('./mongo/users.js')
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL })
 }));
 
 // parse application/x-www-form-urlencoded
@@ -104,6 +105,7 @@ app.post('/login', async (req, res) => {
         const validPassword = await bcrypt.compare(password, userExists.password);
         if (validPassword) {
             req.session.user = username;
+            console.log(req.session);
             res.json({ message: 'User logged in successfully' });
         } else {
             res.json({ message: 'Password is incorrect' });
