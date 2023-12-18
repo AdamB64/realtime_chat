@@ -28,6 +28,13 @@ $(document).ready(async function () {
         console.log(error);
     }
 
+    //console.log('Username:', username);
+    $('#username').text('Welcome ' + username + '!');
+
+    $('#main_chat').on('click', function () {
+        window.location.href = 'chat.html';
+    });
+
     // Redirect to login page if the username is invalid
     //if (username == null || username == "" || username.includes(" ") == true) {
     //  window.location.href = 'login.html';
