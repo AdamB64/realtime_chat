@@ -63,6 +63,7 @@ a {
 }
 
 #form {
+    margin-bottom: 20px;
     background: rgba(0, 0, 0, 0.15);
     padding: 0.25rem;
     position: fixed;
@@ -118,12 +119,10 @@ a {
     width: 30%;
 }
 
-#footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+iframe {
+    margin-top: auto;
     height: 100px;
-    /* Set the height as needed */
+    width: 100%;
 }
 
 input {
