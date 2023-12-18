@@ -1,12 +1,22 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const path = require('path');
 const users = require('./mongo/users.js')
 const bcrypt = require('bcrypt');
+const session = require('express-session');
+
 
 const app = express();
 const port = 3000;
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+}));
 
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
@@ -41,7 +51,7 @@ wss.on('connection', (ws) => {
     // Handle incoming messages from clients
     ws.on('message', (message) => {
         message = message.toString('utf8')
-        console.log(message);
+        //console.log(message);
 
         console.log(`Received message: ${message}`);
 
@@ -93,6 +103,7 @@ app.post('/login', async (req, res) => {
         // Compare the plain text password with the hashed password
         const validPassword = await bcrypt.compare(password, userExists.password);
         if (validPassword) {
+            req.session.user = username;
             res.json({ message: 'User logged in successfully' });
         } else {
             res.json({ message: 'Password is incorrect' });
@@ -100,6 +111,12 @@ app.post('/login', async (req, res) => {
     } else {
         res.json({ message: 'User does not exist' });
     }
+});
+
+
+app.post('/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ message: 'User logged out successfully' });
 });
 
 // Start the server and listen on the specified port

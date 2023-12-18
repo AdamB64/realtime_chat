@@ -92,4 +92,16 @@ $(document).ready(function () {
     if (username == null || username == "" || username.includes(" ") == true) {
         window.location.href = 'login.html';
     }
+
+    socket.addEventListener('close', function (e) {
+        fetch('/logout', {
+            method: 'POST',
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+
 });
