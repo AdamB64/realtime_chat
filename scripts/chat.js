@@ -1,7 +1,32 @@
-$(document).ready(function () {
-    // Get the username from the URL query parameter
-    var urlParams = new URLSearchParams(window.location.search);
-    var username = urlParams.get('username');
+$(document).ready(async function () {
+    try {
+        const response = await fetch('/authorised')
+        const data = await response.json()
+        //console.log(data.message);
+        if (data.message == 'User is not authenticated') {
+            window.location.href = 'login.html';
+            console.log("doesnt work");
+        } else {
+            // Handle the response as usual
+            console.log("works");
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+
+    var username;
+    try {
+        const response = await fetch('/get-username');
+        const data = await response.json();
+        if (data.username) {
+            username = data.username;
+        } else {
+            console.log('No user is currently logged in');
+        }
+    } catch (error) {
+        console.log(error);
+    }
 
     // Use the username as needed
     console.log('Username:', username);

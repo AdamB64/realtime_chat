@@ -19,6 +19,26 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL })
 }));
 
+// Middleware to check if the user is authenticated
+function checkAuth(req, res, next) {
+    if (req.session.user) {
+        req.isAuthenticated = true;
+    } else {
+        req.isAuthenticated = false;
+    }
+    next();
+}
+
+// Use the middleware on the home page route
+app.get('/authorised', checkAuth, (req, res) => {
+    if (req.isAuthenticated) {
+        res.json({ message: 'User is authenticated' });
+    } else {
+        res.json({ message: 'User is not authenticated' });
+    }
+});
+
+
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }));
 
@@ -105,7 +125,7 @@ app.post('/login', async (req, res) => {
         const validPassword = await bcrypt.compare(password, userExists.password);
         if (validPassword) {
             req.session.user = username;
-            console.log(req.session);
+            //console.log(req.session);
             res.json({ message: 'User logged in successfully' });
         } else {
             res.json({ message: 'Password is incorrect' });
@@ -119,6 +139,14 @@ app.post('/login', async (req, res) => {
 app.post('/logout', (req, res) => {
     req.session.destroy();
     res.json({ message: 'User logged out successfully' });
+});
+
+app.get('/get-username', (req, res) => {
+    if (req.session.user) {
+        res.json({ username: req.session.user });
+    } else {
+        res.json({ message: 'No user is currently logged in' });
+    }
 });
 
 // Start the server and listen on the specified port

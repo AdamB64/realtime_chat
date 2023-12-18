@@ -16,7 +16,7 @@ $(document).ready(function () {
         if (loginLogic == false) {
             toastr.error("User does not exist or password is incorrect");
         } else {
-            window.location.href = 'Chat.html?username=' + encodeURIComponent(username);
+            window.location.href = 'home.html';
         }
     });
 
