@@ -13,6 +13,8 @@ const public = require('./mongo/publicChat.js');
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs'); 3
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -173,6 +175,29 @@ app.get('/public-chat_find', async (req, res) => {
     const publicChat = await public.find();
     console.log(publicChat);
     res.json(publicChat);
+});
+
+app.get('/user-permissions', async (req, res) => {
+    const chatRoom = await chatRoom.find();
+
+    try {
+        // Get the user's ID (or username)
+        const userId = req.user.id; // or req.user.username
+
+        // Find all chat rooms where the user is a member
+        const chatRooms = await chatRoom.find({ members: userId });
+        console.log(chatRooms);
+
+        // Extract the names of the chat rooms
+        const chatRoomNames = chatRooms.map(room => room.name);
+        console.log(chatRoomNames);
+
+        // Send the chat room names in the response
+        res.json(chatRoomNames);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 });
 
 // Start the server and listen on the specified port

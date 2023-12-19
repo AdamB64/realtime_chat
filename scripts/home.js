@@ -39,4 +39,28 @@ $(document).ready(async function () {
     //if (username == null || username == "" || username.includes(" ") == true) {
     //  window.location.href = 'login.html';
     //}
+
+    // Fetch the user's permissions and create chat room buttons
+    try {
+        const response = await fetch('/user-permissions')
+        const data = await response.json()
+        // Assume data is an array of chat room names the user has permission to access
+        data.forEach(function (chatRoomName) {
+            // Create a new button for each chat room
+            var button = $('<button>')
+                .text(chatRoomName.name)
+                .attr('id', chatRoomName.name + 'Btn')
+                .addClass('button') // Add the same class as your other buttons
+                .click(function () {
+                    // When the button is clicked, navigate to the corresponding chat room
+                    window.location.href = chatRoomName + '.html';
+                });
+
+            // Add the new button to the DOM inside the 'chat-rooms' <ul>
+            $('#chat-rooms').append(button);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+
 });
