@@ -207,3 +207,12 @@ input {
     text-decoration: none;
     cursor: pointer;
 }
+
+#profile_picture {
+    width: 20%;
+    height: 40%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px;
+}

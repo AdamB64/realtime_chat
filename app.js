@@ -257,6 +257,12 @@ app.get('/profile-picture', async (req, res) => {
     res.json(user);
 });
 
+app.get('/getusers', async (req, res) => {
+    const user = await users.find();
+    //console.log(user);
+    res.json(user);
+});
+
 
 app.post('/private-chat-room', async (req, res) => {
     const { name, members } = req.body;

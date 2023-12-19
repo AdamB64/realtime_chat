@@ -25,6 +25,9 @@ $(document).ready(async function () {
     // Use the username as needed
     //console.log('Username:', username);
     $('#username').val(username);
+    const responce = await fetch('/getusers');
+    const users = await responce.json();
+    console.log(users);
 
     fetch('/public-chat_find')
         .then(response => response.json())
@@ -33,13 +36,21 @@ $(document).ready(async function () {
             for (var i = 0; i < data.length; i++) {
                 //console.log(data[i].username + " " + $('#username').val());
                 if (data[i].username == $('#username').val()) {
-                    $('#messages').append('<li class="align-right" style="background-color:grey;">' +
-                        '<strong>' + data[i].username + ':</strong> ' + data[i].message +
-                        '<span class="date">' + data[i].date + '</span></li>');
+                    for (let ii = 0; ii < users.length; ii++) {
+                        if (users[ii].username == data[i].username) {
+                            $('#messages').append('<li class="align-right" style="background-color:grey;">' +
+                                '<strong>' + data[i].username + ':</strong> ' + data[i].message +
+                                '<span class="date">' + data[i].date + '</span><img id="profile_picture" src=' + users[ii].profilePicture + '></li>');
+                        }
+                    }
                 } else {
-                    $('#messages').append('<li class="align-left" style="background-color:black;">' +
-                        '<strong>' + data[i].username + ':</strong> ' + data[i].message +
-                        '<span class="date">' + data[i].date + '</span></li>');
+                    for (let ii = 0; ii < users.length; ii++) {
+                        if (users[ii].username == data[i].username) {
+                            $('#messages').append('<li class="align-left" style="background-color:black;">' +
+                                '<strong>' + data[i].username + ':</strong> ' + data[i].message +
+                                '<span class="date">' + data[i].date + '</span><img id="profile_picture" src=' + users[ii].profilePicture + '></li>');
+                        }
+                    }
                 }
             }
         })
@@ -85,9 +96,13 @@ $(document).ready(async function () {
             if (data.username && data.message) {
                 // Append the message to the #messages ul
                 //console.log(data);
-                $('#messages').append('<li class="align-right" style="background-color:grey;">' +
-                    '<strong>' + data.username + ':</strong> ' + data.message +
-                    '<span class="date">' + data.date + '</span></li>');
+                for (let i = 0; i < users.length; i++) {
+                    if (users[i].username == data.username) {
+                        $('#messages').append('<li class="align-right" style="background-color:grey;">' +
+                            '<strong>' + data.username + ':</strong> ' + data.message +
+                            '<span class="date">' + data.date + '</span><img id="profile_picture" src=' + users[i].profilePicture + '></li>');
+                    }
+                }
 
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
