@@ -96,7 +96,6 @@ a {
     padding: 0;
     list-style-type: none;
     margin: 0;
-    padding: 0;
     flex-grow: 1;
     /* Allow the messages to grow and fill the available space */
 }
@@ -105,8 +104,11 @@ a {
     display: block;
     background-color: black;
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 20px;
     clear: both;
+    position: relative;
+    margin-bottom: 10px;
+    /* Add space below each li */
     /* Ensure that each li starts on a new line */
 }
 
@@ -148,4 +150,12 @@ input {
 /* Align to the right */
 .align-right {
     float: right;
+}
+
+.date {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 0.8em;
+    /* Adjust as needed */
 }

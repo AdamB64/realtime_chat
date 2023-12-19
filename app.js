@@ -118,17 +118,17 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/public-chat', async (req, res) => {
-    const { username, message } = req.body;
+    const { username, message, date } = req.body;
 
     const publicChat = new public({
         username,
         message,
-        date: new Date()
+        date
     });
 
     try {
         await publicChat.save();
-        console.log(publicChat);
+        console.log("public chat " + publicChat);
         res.json({ message: 'Message sent successfully' });
     } catch (err) {
         console.error(err);
@@ -169,8 +169,9 @@ app.get('/get-username', (req, res) => {
     }
 });
 
-app.get('/public-chat', async (req, res) => {
+app.get('/public-chat_find', async (req, res) => {
     const publicChat = await public.find();
+    console.log(publicChat);
     res.json(publicChat);
 });
 

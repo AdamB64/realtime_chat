@@ -1,4 +1,13 @@
 $(document).ready(async function () {
+    function getFormattedDate() {
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based in JavaScript
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}/${month} ${hours}:${minutes}`;
+    }
+
     var username;
 
     try {
@@ -17,7 +26,7 @@ $(document).ready(async function () {
     //console.log('Username:', username);
     $('#username').val(username);
 
-    fetch('/public-chat')
+    fetch('/public-chat_find')
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -25,10 +34,12 @@ $(document).ready(async function () {
                 console.log(data[i].username + " " + $('#username').val());
                 if (data[i].username == $('#username').val()) {
                     $('#messages').append('<li class="align-right" style="background-color:grey;">' +
-                        '<strong>' + data[i].username + ':</strong> ' + data[i].message + '</li>');
+                        '<strong>' + data[i].username + ':</strong> ' + data[i].message +
+                        '<span class="date">' + data[i].date + '</span></li>');
                 } else {
                     $('#messages').append('<li class="align-left" style="background-color:black;">' +
-                        '<strong>' + data[i].username + ':</strong> ' + data[i].message + '</li>');
+                        '<strong>' + data[i].username + ':</strong> ' + data[i].message +
+                        '<span class="date">' + data[i].date + '</span></li>');
                 }
             }
         })
@@ -73,8 +84,10 @@ $(document).ready(async function () {
             // Assuming data has a 'username' and 'message' property
             if (data.username && data.message) {
                 // Append the message to the #messages ul
-                $('#messages').append('<li class="' + data.alignmentClass + '" style="background-color:' + data.color + ';">' +
-                    '<strong>' + data.username + ':</strong> ' + data.message + '</li>');
+                console.log(data);
+                $('#messages').append('<li class="align-right" style="background-color:grey;">' +
+                    '<strong>' + data.username + ':</strong> ' + data.message +
+                    '<span class="date">' + data.date + '</span></li>');
 
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
@@ -130,7 +143,7 @@ $(document).ready(async function () {
 
         if (message.trim() && username) {
             // Send the message to the server
-            socket.send(JSON.stringify({ username: username, message: message }));
+            socket.send(JSON.stringify({ username: username, message: message, date: getFormattedDate() }));
 
             // Clear the input field
             $('#input').val('');
@@ -156,13 +169,13 @@ $(document).ready(async function () {
             });
     });
 
-    const publicChat = async (username, message) => {
+    const publicChat = async (username, message, date) => {
         const response = await fetch('/public-chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, message })
+            body: JSON.stringify({ username, message, date: getFormattedDate() })
         });
     }
 });
