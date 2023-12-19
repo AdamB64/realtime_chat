@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const public = require('./mongo/publicChat.js');
+const chatRoom = require('./mongo/chat_room_private.js');
 
 
 const app = express();
@@ -138,6 +139,32 @@ app.post('/public-chat', async (req, res) => {
     }
 });
 
+app.post('/private-chat-room', async (req, res) => {
+    const { name, members } = req.body;
+
+    const membersArray = members.split(',');
+
+    // Add the current user to the members array
+    if (req.session && req.session.user) {
+        membersArray.push(req.session.user);
+    }
+
+
+    const privateChatRoom = new chatRoom({
+        name,
+        members: membersArray
+    });
+
+    try {
+        await privateChatRoom.save();
+        res.status(200).json({ message: 'Chat room created successfully' });
+        console.log("private chat room " + privateChatRoom);
+    } catch (err) {
+        console.error(err);
+        res.status(500).jsom('Error sending message');
+    }
+});
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -178,11 +205,11 @@ app.get('/public-chat_find', async (req, res) => {
 });
 
 app.get('/user-permissions', async (req, res) => {
-    const chatRoom = await chatRoom.find();
+    const chat_room_private = await chatRoom.find();
 
     try {
         // Get the user's ID (or username)
-        const userId = req.user.id; // or req.user.username
+        const userId = req.session.user; // or req.user.username
 
         // Find all chat rooms where the user is a member
         const chatRooms = await chatRoom.find({ members: userId });

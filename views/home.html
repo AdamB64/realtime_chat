@@ -5,6 +5,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../scripts/home.js"></script>
 
+    <!-- toastr -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <link rel="stylesheet" href="../styles/styles.css">
 
     <meta charset="UTF-8">
@@ -22,6 +27,21 @@
     </ul>
     <br>
     <button class="button" id="create_chat">Create Chat Room</button>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="new-chat-room-form">
+                <label for="name">Chat room name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="members">Members (comma-separated usernames):</label>
+                <input type="text" id="members" name="members">
+
+                <button type="submit">Create chat room</button>
+            </form>
+        </div>
+    </div>
     <iframe id="footer" src="footer.html"></iframe>
 </body>
 
