@@ -182,8 +182,8 @@ app.post('/public-chat', async (req, res) => {
 });
 
 app.post('/private-chat', async (req, res) => {
-    const { username, text, date, chatRoomName } = req.body;
-    console.log("text " + text)
+    const { username, message, date, chatRoomName } = req.body;
+    console.log(username + " text " + message + " date " + date + " chatroom " + chatRoomName)
     try {
         // Find the chat room by name
         const chatRoomMes = await chatRoom.findOne({ name: chatRoomName });
@@ -193,10 +193,11 @@ app.post('/private-chat', async (req, res) => {
         }
 
         // Create a new message
-        const message = { username, text, date };
+        const chat = { username, message, date };
+        console.log("chat " + JSON.stringify(chat));
 
         // Add the message to the chat room
-        chatRoomMes.messages.push(message);
+        chatRoomMes.chat.push(chat);
 
         // Save the updated chat room
         await chatRoomMes.save();

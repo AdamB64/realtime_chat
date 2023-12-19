@@ -43,19 +43,21 @@ $(document).ready(async function () {
 
     const urlParams = new URLSearchParams(window.location.search);
     const chatRoomName = urlParams.get('name');
+
+
     const chatRoomResponse = await fetch(`/chat-room-data?chatroom=${encodeURIComponent(chatRoomName)}`);
     const chatRoomData = await chatRoomResponse.json();
     console.log(chatRoomData);
-    for (var i = 0; i < chatRoomData.messages.length; i++) {
-        //console.log(data[i].username + " " + $('#username').val());
-        if (chatRoomData.messages[i].username == $('#username').val()) {
+    for (var i = 0; i < chatRoomData.chat.length; i++) {
+
+        if (chatRoomData.chat[i].username == $('#username').val()) {
             $('#messages').append('<li class="align-right" style="background-color:grey;">' +
-                '<strong>' + chatRoomData.messages[i].username + ':</strong> ' + chatRoomData.messages[i].text +
-                '<span class="date">' + chatRoomData.messages[i].date + '</span></li>');
+                '<strong>' + chatRoomData.chat[i].username + ':</strong> ' + chatRoomData.chat[i].message +
+                '<span class="date">' + chatRoomData.chat[i].date + '</span></li>');
         } else {
             $('#messages').append('<li class="align-left" style="background-color:black;">' +
-                '<strong>' + chatRoomData.messages[i].username + ':</strong> ' + chatRoomData.messages[i].text +
-                '<span class="date">' + chatRoomData.messages[i].date + '</span></li>');
+                '<strong>' + chatRoomData.chat[i].username + ':</strong> ' + chatRoomData.chat[i].message +
+                '<span class="date">' + chatRoomData.chat[i].date + '</span></li>');
         }
     }
 
@@ -85,6 +87,7 @@ $(document).ready(async function () {
 
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
+                //console.log(data.message);
                 privateChat(data.username, data.message).then(() => {
                     //console.log("public chat saved");
                 }).catch((error) => {
@@ -136,13 +139,13 @@ $(document).ready(async function () {
     });
 
     const privateChat = async (username, message, date, chatroom) => {
-        console.log()
+        console.log(message)
         const response = await fetch('/private-chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, message, date: getFormattedDate(), chatRoomName: chatRoomName })
+            body: JSON.stringify({ username, message: message, date: getFormattedDate(), chatRoomName: chatRoomName })
         });
     }
 
