@@ -32,9 +32,10 @@ $(document).ready(async function () {
         e.preventDefault();
 
         let formData = new FormData(this);
+        formData.append('username', 'ben');
 
         $.ajax({
-            url: '/upload?username=' + username,
+            url: '/upload',
             type: 'POST',
             data: formData,
             processData: false,  // tell jQuery not to process the data
@@ -42,10 +43,11 @@ $(document).ready(async function () {
             success: function (data) {
                 console.log('Upload successful');
                 // You can update the profile picture here if you want
-                // $('#profilePicture').attr('src', data.profilePicture);
+                $('#profilePicture').attr('src', data.profilePicture);
             },
             error: function (error) {
                 console.log('Error:', error);
+                console.log('Upload failed');
             }
         });
     });

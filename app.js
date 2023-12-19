@@ -17,7 +17,9 @@ const storage = multer.diskStorage({
         cb(null, './img/');
     },
     filename: function (req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
+        let date = new Date().toISOString();
+        date = date.replace(/:/g, '-');  // Replace colons with hyphens
+        cb(null, date + '-' + file.originalname);
     }
 });
 
@@ -189,7 +191,7 @@ app.post('/public-chat', async (req, res) => {
 
     try {
         await publicChat.save();
-        console.log("public chat " + publicChat);
+        //console.log("public chat " + publicChat);
         res.json({ message: 'Message sent successfully' });
     } catch (err) {
         console.error(err);
@@ -199,7 +201,7 @@ app.post('/public-chat', async (req, res) => {
 
 app.post('/private-chat', async (req, res) => {
     const { username, message, date, chatRoomName } = req.body;
-    console.log(username + " text " + message + " date " + date + " chatroom " + chatRoomName)
+    //console.log(username + " text " + message + " date " + date + " chatroom " + chatRoomName)
     try {
         // Find the chat room by name
         const chatRoomMes = await chatRoom.findOne({ name: chatRoomName });
@@ -210,7 +212,7 @@ app.post('/private-chat', async (req, res) => {
 
         // Create a new message
         const chat = { username, message, date };
-        console.log("chat " + JSON.stringify(chat));
+        //console.log("chat " + JSON.stringify(chat));
 
         // Add the message to the chat room
         chatRoomMes.chat.push(chat);
@@ -218,7 +220,7 @@ app.post('/private-chat', async (req, res) => {
         // Save the updated chat room
         await chatRoomMes.save();
 
-        console.log("public chat " + chatRoomMes);
+        //console.log("public chat " + chatRoomMes);
         res.json({ message: 'Message sent successfully' });
     } catch (err) {
         console.error(err);
@@ -241,6 +243,7 @@ app.post('/upload', upload.single('profilePicture'), async (req, res) => {
     await user.save();
 
     res.json({ message: 'Profile picture uploaded successfully' });
+    //console.log("profile picture " + user.profilePicture);
 });
 
 app.get('/profile-picture', async (req, res) => {
@@ -250,7 +253,7 @@ app.get('/profile-picture', async (req, res) => {
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
-    console.log("user " + JSON.stringify(user));
+    //console.log("user " + JSON.stringify(user));
     res.json(user);
 });
 
@@ -268,9 +271,9 @@ app.post('/private-chat-room', async (req, res) => {
     // Check if all members are users
     for (let i = 0; i < membersArray.length; i++) {
         const user = await users.findOne({ username: membersArray[i] });
-        console.log("user 1" + user);
+        //console.log("user 1" + user);
         if (user == null) {
-            console.log("user2 " + user);
+            //console.log("user2 " + user);
             return res.status(400).json({ message: 'All members must be users' });
         }
     }
@@ -327,7 +330,7 @@ app.get('/get-username', (req, res) => {
 
 app.get('/public-chat_find', async (req, res) => {
     const publicChat = await public.find();
-    console.log(publicChat);
+    //console.log(publicChat);
     res.json(publicChat);
 });
 
@@ -340,11 +343,11 @@ app.get('/user-permissions', async (req, res) => {
 
         // Find all chat rooms where the user is a member
         const chatRooms = await chatRoom.find({ members: userId });
-        console.log(chatRooms);
+        //console.log(chatRooms);
 
         // Extract the names of the chat rooms
         const chatRoomNames = chatRooms.map(room => room.name);
-        console.log(chatRoomNames);
+        //console.log(chatRoomNames);
 
         // Send the chat room names in the response
         res.json(chatRoomNames);
