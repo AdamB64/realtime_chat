@@ -29,9 +29,9 @@ $(document).ready(async function () {
     fetch('/public-chat_find')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            //console.log(data);
             for (var i = 0; i < data.length; i++) {
-                console.log(data[i].username + " " + $('#username').val());
+                //console.log(data[i].username + " " + $('#username').val());
                 if (data[i].username == $('#username').val()) {
                     $('#messages').append('<li class="align-right" style="background-color:grey;">' +
                         '<strong>' + data[i].username + ':</strong> ' + data[i].message +
@@ -54,10 +54,10 @@ $(document).ready(async function () {
         //console.log(data.message);
         if (data.message == 'User is not authenticated') {
             window.location.href = 'login.html';
-            console.log("doesnt work");
+            //console.log("doesnt work");
         } else {
             // Handle the response as usual
-            console.log("works");
+            //console.log("works");
         }
     }
     catch (error) {
@@ -69,22 +69,22 @@ $(document).ready(async function () {
 
     // WebSocket connection opened
     socket.addEventListener('open', (event) => {
-        console.log('WebSocket connection opened', event);
+        //console.log('WebSocket connection opened', event);
         // You can add any initialization logic here
     });
 
-    console.log('Script loaded');
+    //console.log('Script loaded');
     // WebSocket received a message
 
     socket.addEventListener('message', (event) => {
         try {
             var data = JSON.parse(event.data);
-            console.log('Parsed message:', data);
+            //console.log('Parsed message:', data);
 
             // Assuming data has a 'username' and 'message' property
             if (data.username && data.message) {
                 // Append the message to the #messages ul
-                console.log(data);
+                //console.log(data);
                 $('#messages').append('<li class="align-right" style="background-color:grey;">' +
                     '<strong>' + data.username + ':</strong> ' + data.message +
                     '<span class="date">' + data.date + '</span></li>');
@@ -92,7 +92,7 @@ $(document).ready(async function () {
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
                 publicChat(data.username, data.message).then(() => {
-                    console.log("public chat saved");
+                    //console.log("public chat saved");
                 }).catch((error) => {
                     console.error('Error:', error);
                 });
@@ -131,7 +131,7 @@ $(document).ready(async function () {
 
     // WebSocket connection error
     socket.addEventListener('error', (event) => {
-        console.error('WebSocket connection error', event);
+        //console.error('WebSocket connection error', event);
     });
 
 

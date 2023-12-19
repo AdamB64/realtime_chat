@@ -5,14 +5,14 @@ $(document).ready(function () {
         toastr.success("User created successfully");
     }
     $('#LoginActBt').on('click', async function () {
-        console.log("login");
+        //console.log("login");
         var username = $('#LUsername').val();
         var password = $('#LPassword').val();
         // Clear input fields
         $('#LUsername').val('');
         $('#LPassword').val('');
         let loginLogic = await loginUser(username, password);
-        console.log(loginLogic);
+        //console.log(loginLogic);
         if (loginLogic == false) {
             toastr.error("User does not exist or password is incorrect");
         } else {
@@ -21,7 +21,7 @@ $(document).ready(function () {
     });
 
     $('#LShowPassword').on('click', function () {
-        console.log("works")
+        //console.log("works")
         var x = $("#LPassword");
         if (x.prop("type") == "password") {
             x.prop("type", "text");
@@ -42,7 +42,7 @@ $(document).ready(function () {
             body: JSON.stringify({ username, password })
         });
         const data = await response.json();
-        console.log(data.message);
+        //console.log(data.message);
         if (data.message == "User logged in successfully") {
             loginLogic = true;
         } else {

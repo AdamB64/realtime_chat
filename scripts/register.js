@@ -11,7 +11,7 @@ $(document).ready(async function () {
 
                 let regsiterLogic = await registerUser(username, password);
 
-                console.log(regsiterLogic);
+                //console.log(regsiterLogic);
                 if (regsiterLogic == false) {
                     toastr.error("User already exists");
                 } else {
@@ -26,7 +26,7 @@ $(document).ready(async function () {
     });
 
     $('#RShowPassword').on('click', function () {
-        console.log("works")
+        //console.log("works")
         var x = $("#Rpassword");
         if (x.prop("type") == "password") {
             x.prop("type", "text");
@@ -44,7 +44,7 @@ $(document).ready(async function () {
             body: JSON.stringify({ username, password })
         });
         const data = await response.json();
-        console.log(data.message);
+        //console.log(data.message);
         if (data.message == "User already exits") {
             regsiterLogic = false;
         } else {

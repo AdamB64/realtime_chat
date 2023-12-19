@@ -5,10 +5,10 @@ $(document).ready(async function () {
         //console.log(data.message);
         if (data.message == 'User is not authenticated') {
             window.location.href = 'login.html';
-            console.log("doesnt work");
+            //console.log("doesnt work");
         } else {
             // Handle the response as usual
-            console.log("works");
+            //console.log("works");
         }
     }
     catch (error) {
