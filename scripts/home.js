@@ -56,7 +56,7 @@ $(document).ready(async function () {
                 .click(function () {
 
                     // When the button is clicked, navigate to the corresponding chat room
-                    window.location.href = data[i] + '.html';
+                    window.location.href = 'chatroom.html?name=' + data[i];
                 });
 
             // Add the new button to the DOM inside the 'chat-rooms' <ul>
@@ -104,8 +104,13 @@ $(document).ready(async function () {
                 modal.style.display = "none";
                 console.log("Chat room created successfully");
             })
-            .fail(function () {
-                toastr.error('Could not create chat room');
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                //console.log(jqXHR.status)
+                if (jqXHR.status == 400) {
+                    toastr.error('All members must be users');
+                } else {
+                    toastr.error('Could not create chat room');
+                }
             });
     });
 

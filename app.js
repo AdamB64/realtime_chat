@@ -9,19 +9,25 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const public = require('./mongo/publicChat.js');
 const chatRoom = require('./mongo/chat_room_private.js');
-
+const expressWs = require('express-ws');
 
 const app = express();
+expressWs(app); // Add WebSocket support to Express app
+
 const port = 3000;
 
-app.set('view engine', 'ejs'); 3
+app.set('view engine', 'ejs');
 
-app.use(session({
+
+let expressSession = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URL })
-}));
+});
+
+
+app.use(expressSession)
 
 // Middleware to check if the user is authenticated
 function checkAuth(req, res, next) {
@@ -58,7 +64,15 @@ app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 const server = http.createServer(app);
 
 // Create a WebSocket server by passing the HTTP server
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ noServer: true });
+
+server.on('upgrade', function (request, socket, head) {
+    expressSession(request, {}, () => {
+        wss.handleUpgrade(request, socket, head, function done(ws) {
+            wss.emit('connection', ws, request);
+        });
+    });
+});
 
 // Set the 'views' folder as the static directory
 app.use(express.static(path.join(__dirname, 'views')));
@@ -68,33 +82,61 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// WebSocket server handling connections
-wss.on('connection', (ws) => {
-    // WebSocket connection is established
+// Create a map to hold the clients for each chat room
+const chatRooms = new Map();
+
+// Create a map to hold the WebSocket connection for each user
+const userConnections = new Map();
+
+wss.on('connection', (ws, req) => {
     console.log('WebSocket connection established');
 
-    // Handle incoming messages from clients
+    // Get the username from the session
+    const username = req.session.user;
+
+    // Store the WebSocket connection for this user
+    userConnections.set(username, ws);
+
     ws.on('message', (message) => {
-        message = message.toString('utf8')
-        //console.log(message);
+        message = JSON.parse(message.toString('utf8'));
+
+        // Get the chat room name from the message
+        const chatRoomName = message.chatRoomName;
+
+        // Get the users for this chat room
+        const users = chatRooms.get(chatRoomName) || new Set();
+
+        // Add this user to the chat room
+        users.add(username);
+        chatRooms.set(chatRoomName, users);
 
         console.log(`Received message: ${message}`);
 
-        // Broadcast the message to all connected clients
-        wss.clients.forEach((client) => {
-            if (/*client !== ws &&*/ client.readyState === WebSocket.OPEN) {
-                // Parse the message once
-                const parsedMessage = JSON.parse(message);
-
+        // Broadcast the message to all connected users in the same chat room
+        users.forEach((user) => {
+            const client = userConnections.get(user);
+            if (client && client.readyState === WebSocket.OPEN) {
                 // Set the color based on whether it's the sender or not
-                parsedMessage.color = client === ws ? 'grey' : 'black';
-                parsedMessage.alignmentClass = client === ws ? 'align-right' : 'align-left';
+                message.color = client === ws ? 'grey' : 'black';
+                message.alignmentClass = client === ws ? 'align-right' : 'align-left';
 
                 // Send the updated message
-                //console.log(parsedMessage)
-                client.send(JSON.stringify(parsedMessage));
+                client.send(JSON.stringify(message));
             }
         });
+    });
+
+    // When the client disconnects, remove them from all chat rooms
+    ws.on('close', () => {
+        chatRooms.forEach((users, chatRoomName) => {
+            users.delete(username);
+            if (users.size === 0) {
+                chatRooms.delete(chatRoomName);
+            } else {
+                chatRooms.set(chatRoomName, users);
+            }
+        });
+        userConnections.delete(username);
     });
 });
 
@@ -139,6 +181,35 @@ app.post('/public-chat', async (req, res) => {
     }
 });
 
+app.post('/private-chat', async (req, res) => {
+    const { username, text, date, chatRoomName } = req.body;
+    console.log("text " + text)
+    try {
+        // Find the chat room by name
+        const chatRoomMes = await chatRoom.findOne({ name: chatRoomName });
+
+        if (!chatRoomMes) {
+            return res.status(404).json({ message: 'Chat room not found' });
+        }
+
+        // Create a new message
+        const message = { username, text, date };
+
+        // Add the message to the chat room
+        chatRoomMes.messages.push(message);
+
+        // Save the updated chat room
+        await chatRoomMes.save();
+
+        console.log("public chat " + chatRoomMes);
+        res.json({ message: 'Message sent successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error sending message' });
+    }
+});
+
+
 app.post('/private-chat-room', async (req, res) => {
     const { name, members } = req.body;
 
@@ -149,6 +220,17 @@ app.post('/private-chat-room', async (req, res) => {
         membersArray.push(req.session.user);
     }
 
+    // Check if all members are users
+    for (let i = 0; i < membersArray.length; i++) {
+        const user = await users.findOne({ username: membersArray[i] });
+        console.log("user 1" + user);
+        if (user == null) {
+            console.log("user2 " + user);
+            return res.status(400).json({ message: 'All members must be users' });
+        }
+    }
+
+
 
     const privateChatRoom = new chatRoom({
         name,
@@ -158,10 +240,10 @@ app.post('/private-chat-room', async (req, res) => {
     try {
         await privateChatRoom.save();
         res.status(200).json({ message: 'Chat room created successfully' });
-        console.log("private chat room " + privateChatRoom);
+        //console.log("private chat room " + privateChatRoom);
     } catch (err) {
         console.error(err);
-        res.status(500).jsom('Error sending message');
+        res.status(500).json('Error sending message');
     }
 });
 
@@ -225,6 +307,17 @@ app.get('/user-permissions', async (req, res) => {
         console.error(error);
         res.status(500).send('Server error');
     }
+});
+
+app.get('/chat-room-data', async (req, res) => {
+    // Get the chat room name from the query parameters
+    const chatRoomName = req.query.chatroom;
+
+    // Fetch the chat room data from the database
+    const chatRoomData = await chatRoom.findOne({ name: chatRoomName });
+
+    // Send the chat room data as the response
+    res.json(chatRoomData);
 });
 
 // Start the server and listen on the specified port
