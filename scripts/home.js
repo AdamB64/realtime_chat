@@ -92,6 +92,10 @@ $(document).ready(async function () {
         }
     }
 
+    $('#profile').on('click', function () {
+        window.location.href = 'profile.html';
+    });
+
     $('#new-chat-room-form').on('submit', function (event) {
         event.preventDefault();
 

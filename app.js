@@ -10,6 +10,18 @@ const MongoStore = require('connect-mongo');
 const public = require('./mongo/publicChat.js');
 const chatRoom = require('./mongo/chat_room_private.js');
 const expressWs = require('express-ws');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './img/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toISOString() + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 const app = express();
 expressWs(app); // Add WebSocket support to Express app
@@ -23,7 +35,10 @@ let expressSession = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL })
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
 });
 
 
@@ -58,6 +73,7 @@ app.use(express.json());
 // Serve static files from the 'styles' and 'scripts' folders
 app.use('/styles', express.static(path.join(__dirname, 'styles')));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
+app.use('/img', express.static(path.join(__dirname, 'img')));
 
 
 // Create an HTTP server and integrate it with Express
@@ -208,6 +224,34 @@ app.post('/private-chat', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Error sending message' });
     }
+});
+
+app.post('/upload', upload.single('profilePicture'), async (req, res) => {
+    const { username } = req.body;
+
+    const user = await users.findOne({ username });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update the user's profile picture
+    user.profilePicture = req.file.path;
+
+    // Save the updated user
+    await user.save();
+
+    res.json({ message: 'Profile picture uploaded successfully' });
+});
+
+app.get('/profile-picture', async (req, res) => {
+    const { username } = req.query;
+
+    const user = await users.findOne({ username });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    console.log("user " + JSON.stringify(user));
+    res.json(user);
 });
 
 
