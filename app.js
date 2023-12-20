@@ -107,7 +107,7 @@ const chatRooms = new Map();
 const userConnections = new Map();
 
 wss.on('connection', (ws, req) => {
-    console.log('WebSocket connection established');
+    //console.log('WebSocket connection established');
 
     // Get the username from the session
     const username = req.session.user;
