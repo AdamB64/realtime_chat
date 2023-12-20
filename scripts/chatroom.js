@@ -48,16 +48,25 @@ $(document).ready(async function () {
     const chatRoomResponse = await fetch(`/chat-room-data?chatroom=${encodeURIComponent(chatRoomName)}`);
     const chatRoomData = await chatRoomResponse.json();
     console.log(chatRoomData);
+
+
+    const responce = await fetch('/getusers');
+    const users = await responce.json();
+
     for (var i = 0; i < chatRoomData.chat.length; i++) {
 
         if (chatRoomData.chat[i].username == $('#username').val()) {
-            $('#messages').append('<li class="align-right" style="background-color:grey;">' +
-                '<strong>' + chatRoomData.chat[i].username + ':</strong> ' + chatRoomData.chat[i].message +
-                '<span class="date">' + chatRoomData.chat[i].date + '</span></li>');
+            for (ii = 0; ii < users.length; ii++) {
+                $('#messages').append('<li class="align-right" style="background-color:grey;">' +
+                    '<strong>' + chatRoomData.chat[i].username + ':</strong> ' + chatRoomData.chat[i].message +
+                    '<span class="date">' + chatRoomData.chat[i].date + '</span><img id="profile_picture" src=' + users[ii].profilePicture + '></li>');
+            }
         } else {
-            $('#messages').append('<li class="align-left" style="background-color:black;">' +
-                '<strong>' + chatRoomData.chat[i].username + ':</strong> ' + chatRoomData.chat[i].message +
-                '<span class="date">' + chatRoomData.chat[i].date + '</span></li>');
+            for (ii = 0; ii < users.length; ii++) {
+                $('#messages').append('<li class="align-left" style="background-color:black;">' +
+                    '<strong>' + chatRoomData.chat[i].username + ':</strong> ' + chatRoomData.chat[i].message +
+                    '<span class="date">' + chatRoomData.chat[i].date + '</span><img id="profile_picture" src=' + users[ii].profilePicture + '></li>');
+            }
         }
     }
 
@@ -81,9 +90,11 @@ $(document).ready(async function () {
             if (data.username && data.message) {
                 // Append the message to the #messages ul
                 //console.log(data);
-                $('#messages').append('<li class="align-right" style="background-color:grey;">' +
-                    '<strong>' + data.username + ':</strong> ' + data.message +
-                    '<span class="date">' + data.date + '</span></li>');
+                for (let i = 0; i < users.length; i++) {
+                    $('#messages').append('<li class="align-right" style="background-color:grey;">' +
+                        '<strong>' + data.username + ':</strong> ' + data.message +
+                        '<span class="date">' + data.date + '</span><img id="profile_picture" src=' + users[ii].profilePicture + '></li>');
+                }
 
                 // Optionally, scroll to the bottom of the #messages ul
                 $('#messages').scrollTop($('#messages')[0].scrollHeight);
@@ -145,7 +156,7 @@ $(document).ready(async function () {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, message: message, date: getFormattedDate(), chatRoomName: chatRoomName })
+            body: JSON.stringify({ username, message: message, date: getFormattedDate(), chatRoomName: chatRoomName, isChatRoom: true })
         });
     }
 
