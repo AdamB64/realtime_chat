@@ -1,9 +1,16 @@
+@font-face {
+    font-family: 'Shadows';
+    /* Choose a name for your font */
+    src: url('./RubikDoodleShadow-Regular.ttf') format('truetype');
+    /* Add other font properties if needed, like font-weight and font-style */
+}
+
 * {
     color: white;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: 'Shadows', sans-serif;
 }
 
 body {
