@@ -6,7 +6,7 @@
 }
 
 * {
-    color: white;
+    color: rgb(0, 0, 0);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -27,6 +27,12 @@ body {
 
 
 h1 {
+    font-size: 33px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+p {
     font-size: 33px;
     margin-bottom: 20px;
     text-align: center;
@@ -67,6 +73,17 @@ a {
     text-align: center;
     text-decoration: none;
     font-size: 18px;
+}
+
+
+.smallbutton {
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 25%;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
 }
 
 #form {
@@ -135,14 +152,14 @@ iframe {
 }
 
 input {
-    color: black;
+    color: rgb(0, 0, 0);
     width: 60%;
     height: 35px;
     font-size: 20px;
 }
 
-#username {
-    width: 30%;
+#user {
+    color: white;
 }
 
 #password {
@@ -222,4 +239,12 @@ input {
     top: 0;
     right: 0;
     padding: 2px;
+}
+
+#profileForm {
+    display: none;
+}
+
+#passwordForm {
+    display: none;
 }

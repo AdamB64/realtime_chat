@@ -5,6 +5,7 @@ const useSchema = new mongoose.Schema({
     username: String,
     password: String,
     profilePicture: { type: String, default: "../img/profilePicture.jpeg" },
+    session: String,
 });
 
 useSchema.pre('save', function (next) {

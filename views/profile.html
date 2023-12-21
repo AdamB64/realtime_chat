@@ -19,12 +19,28 @@
 </head>
 
 <body>
-    <form action="/users/<%= user._id %>/edit" method="post" enctype="multipart/form-data">
+    <h1 id="user">hello users: </h1>
+    <br>
+    <h2>this is your profile picture</h2>
+    <img id="profilePicture">
+
+    <br>
+    <h2>you can change it by clicking here</h2>
+    <button id="changeProfilePicture" class="smallbutton">change profile picture</button>
+    <form id="profileForm" action="/users/<%= user._id %>/edit" method="post" enctype="multipart/form-data">
         <input type="file" name="profilePicture">
         <!-- Other form fields go here -->
         <button type="submit">Update Profile</button>
     </form>
-    <img id="profilePicture">
+    <br>
+    <h2>you can change your password by clicking here</h2>
+    <button id="changePassword" class="smallbutton">change password</button>
+    <form id="passwordForm" action="/users/<%= user._id %>/edit" method="post">
+        <input type="password" id="password" placeholder="password">
+        <input type="password" id="password2" placeholder="confirm password">
+        <!-- Other form fields go here -->
+        <button type="submit">Update Password</button>
+    </form>
 </body>
 
 </html>

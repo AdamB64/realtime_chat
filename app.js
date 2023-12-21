@@ -170,6 +170,8 @@ app.post('/register', async (req, res) => {
             password
         });
 
+        user.session = req.sessionID
+
         try {
             await user.save();
             res.json({ message: 'User created successfully' });
@@ -244,6 +246,20 @@ app.post('/upload', upload.single('profilePicture'), async (req, res) => {
 
     res.json({ message: 'Profile picture uploaded successfully' });
     //console.log("profile picture " + user.profilePicture);
+});
+
+app.post('/change-password', async (req, res) => {
+    const { username, password } = req.body;
+    //console.log("username " + username + " password " + password);
+
+    const user = await users.findOne({ username });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+    res.send(true);
 });
 
 app.get('/profile-picture', async (req, res) => {

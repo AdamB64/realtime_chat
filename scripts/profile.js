@@ -1,4 +1,20 @@
 $(document).ready(async function () {
+    try {
+        const response = await fetch('/authorised')
+        const data = await response.json()
+        //console.log(data.message);
+        if (data.message == 'User is not authenticated') {
+            window.location.href = 'login.html';
+            //console.log("doesnt work");
+        } else {
+            // Handle the response as usual
+            //console.log("works");
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+
     var username;
     try {
         const response = await fetch('/get-username');
@@ -11,13 +27,16 @@ $(document).ready(async function () {
     } catch (error) {
         console.log(error);
     }
+    console.log('Username:', username);
+    $('#user').append(username);
+    console.log("value " + $('#user').val());
 
 
     try {
         const response = await fetch('/profile-picture?username=' + username);
-        console.log(response);
+        //console.log(response);
         const data = await response.json();
-        console.log("data" + JSON.stringify(data));
+        //console.log("data" + JSON.stringify(data));
         if (data.profilePicture) {
             //console.log(data.profilePicture);
             $('#profilePicture').attr('src', data.profilePicture);
@@ -28,7 +47,7 @@ $(document).ready(async function () {
         console.log(error);
     }
 
-    $('form').on('submit', function (e) {
+    $('#profileForm').on('submit', function (e) {
         e.preventDefault();
 
         let formData = new FormData(this);
@@ -41,7 +60,7 @@ $(document).ready(async function () {
             processData: false,  // tell jQuery not to process the data
             contentType: false,  // tell jQuery not to set contentType
             success: function (data) {
-                console.log('Upload successful');
+                toastr.success('Upload successful');
                 // You can update the profile picture here if you want
                 $('#profilePicture').attr('src', data.profilePicture);
             },
@@ -50,5 +69,32 @@ $(document).ready(async function () {
                 console.log('Upload failed');
             }
         });
+    });
+
+    $('#passwordForm').on('submit', async function (e) {
+        e.preventDefault();
+        //console.log($('#password').val());
+        if ($('#password').val() != $('#password2').val()) {
+            toastr.error('Passwords do not match');
+            return;
+        } else {
+
+            const response = await fetch('/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password: $('#password').val() })
+            });
+            toastr.success('Password changed successfully');
+        }
+    });
+
+    $('#changeProfilePicture').on('click', function () {
+        $('#profileForm').toggle();
+    });
+
+    $('#changePassword').on('click', function () {
+        $('#passwordForm').toggle();
     });
 });

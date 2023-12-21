@@ -151,7 +151,7 @@ $(document).ready(async function () {
 
     const privateChat = async (username, message, date, chatroom) => {
         console.log(message)
-        const response = await fetch('/private-chat', {
+        const response = await fetch('/change-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
