@@ -8,3 +8,4 @@ MONGO_URL='mongodb://127.0.0.1:27017/your databases name'<br>
 and also you this https://www.youtube.com/watch?v=gB6WLkSrtJk video to get a mongodb database working and then you can make you database and call it what you decide earlier in the mongo_url
 
 also to run open the terminal and run node app.js
+not adding any more and what is there is what is there
