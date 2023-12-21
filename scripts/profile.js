@@ -35,6 +35,7 @@ $(document).ready(async function () {
     try {
         const response = await fetch('/profile-picture?username=' + username);
         //console.log(response);
+
         const data = await response.json();
         //console.log("data" + JSON.stringify(data));
         if (data.profilePicture) {
