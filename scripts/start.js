@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     function checkKonamiCode(event) {
         const key = event.key.toLowerCase();
-        //console.log(key);
+        console.log(key);
         if (key === konamiCode[konamiCodeIndex]) {
             konamiCodeIndex++;
 
