@@ -1,7 +1,7 @@
 this is an realtime chat website that i am making as something to do that allows users to make an account and then login and view a blog that gets saved and one on one chats and group chats
 
-all the install you need to run the website on your machine
-try first npm install and if that doesnt work for all of them do the next line
+all the install you need to run the website on your machine<br>
+try first npm install and if that doesnt work for all of them do the next line<br>
 npm install dotenv express http ws path bcrypt express-session connect-mongo express-ws multer
 
 to get this to work also make an file called .env and have this in it SESSION_SECRET='relace with random string between 15 to 25'<br>
