@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/c93c4882-d272-4fb1-9617-def3394a90b0/resourceGroups/a/providers/Microsoft.Web/sites/chatRooms934",
+    "appService.deploySubpath": "."
+}
